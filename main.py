@@ -1,3 +1,1 @@
-from config.appconfig import config
-
-print(config.processed_emcb_data_directory)
+import visualization.publications.ashrae_2021_w_conf.ashrae_2021_w_conf
