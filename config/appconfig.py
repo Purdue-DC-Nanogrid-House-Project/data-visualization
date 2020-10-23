@@ -14,4 +14,4 @@ class Config(object):
             self.__dict__.update(parser.items(name))
 
 
-config = Config(r'H:\Purdue Projects\data-visualization\config\appconfig.ini')
+config = Config(r'F:\Purdue Projects\data-visualization\config\appconfig.ini')

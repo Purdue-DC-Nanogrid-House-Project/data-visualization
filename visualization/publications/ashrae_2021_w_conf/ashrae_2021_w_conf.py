@@ -185,8 +185,6 @@ heat_pump_degree_day_df.reset_index(drop=True, inplace=True)
 
 # Iterate over each configuration period and assign the associated values
 def build_summary_dict(df):
-    heating_degree_filter_df = heating_degree_df[heating_degree_df]
-
     hdh_std = heating_degree_df[heating_degree_df.Date.between(
         df['time'].iloc[0], df['time'].iloc[-1])][heating_degree_col_name].std()
     hdh_avg = heating_degree_df[heating_degree_df.Date.between(
