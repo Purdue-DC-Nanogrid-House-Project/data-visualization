@@ -1,6 +1,6 @@
 from configparser import ConfigParser
 
-section_names = 'DATA_DIRECTORIES',
+section_names = 'DATA_DIRECTORIES', 'MEDIA_DIRECTORIES', 'WEATHER_DATA_TYPES',
 
 
 class Config(object):
