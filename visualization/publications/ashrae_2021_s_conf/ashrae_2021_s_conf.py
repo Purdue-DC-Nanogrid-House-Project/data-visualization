@@ -17,14 +17,14 @@ data_value_col_name = 'value'
 
 class ASHRAE2021SummerConf:
     def __init__(self):
-        self.weather_hourly_df = pd.DataFrame()
-        self.weather_daily_df = pd.DataFrame()
+        self.weather_api_hourly_df = pd.DataFrame()
+        self.weather_api_daily_df = pd.DataFrame()
         self.weather_station_measurements = dict()
         self.illuminance_measurements = pd.DataFrame()
 
     def load_data(self, start_date, end_date):
         # Load hourly and daily weather data available
-        hourly_data_dir = config.PROCESSED_WEATHER_DATA_DIR + '\\' + config.HOURLY_DATA
+        hourly_data_dir = config.ROOT_DATA_DIR + config.PROCESSED_WEATHER_DATA_DIR + '\\' + config.HOURLY_DATA
         daily_data_dir = config.PROCESSED_WEATHER_DATA_DIR + '\\' + config.DAILY_DATA
 
         hourly_data_files = [f for f in listdir(hourly_data_dir)if isfile(join(hourly_data_dir, f))]
@@ -44,8 +44,8 @@ class ASHRAE2021SummerConf:
         daily_mask = (weather_daily_df[timestamp_col_name].dt.tz_localize(None) >= start_date) \
             & (weather_daily_df[timestamp_col_name].dt.tz_localize(None) <= end_date)
 
-        self.weather_hourly_df = weather_hourly_df.loc[hourly_mask]
-        self.weather_daily_df = weather_daily_df.loc[daily_mask]
+        self.weather_api_hourly_df = weather_hourly_df.loc[hourly_mask]
+        self.weather_api_daily_df = weather_daily_df.loc[daily_mask]
 
         # Load local weather station data
         station_data_dir = config.PROCESSED_STATION_DATA_DIR
