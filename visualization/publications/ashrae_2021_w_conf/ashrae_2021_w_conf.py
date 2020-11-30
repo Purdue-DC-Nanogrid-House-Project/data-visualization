@@ -47,8 +47,8 @@ balance_point_temperature = 65  # Degrees F
 
 start_date = '2018-03-22'
 end_date = '2020-06-02'
-hourly_weather_filename = start_date + '_to_' + end_date + '_hourly_weather_data.pkl'
-daily_weather_filename = start_date + '_to_' + end_date + '_daily_weather_data.pkl'
+hourly_weather_filename = start_date + '_to_' + end_date + '_darksky_hourly_weather_data.pkl'
+daily_weather_filename = start_date + '_to_' + end_date + '_darksky_daily_weather_data.pkl'
 
 ending_date = datetime(2020, 6, 1)
 
@@ -56,11 +56,11 @@ from_zone = tz.gettz('UTC')
 to_zone = tz.gettz('US/Eastern')
 
 # Load hourly and daily weather data
-file = open(config.PROCESSED_WEATHER_DATA_DIR + '\\' + hourly_weather_filename, 'rb')
+file = open(config.PROCESSED_WEATHER_DATA_DIR + '\\' + config.HOURLY_DATA + '\\' + hourly_weather_filename, 'rb')
 weather_hourly_df = pickle.load(file)
 weather_hourly_df.reset_index(drop=True, inplace=True)
 
-file = open(config.PROCESSED_WEATHER_DATA_DIR + '\\' + daily_weather_filename, 'rb')
+file = open(config.PROCESSED_WEATHER_DATA_DIR + '\\' + config.DAILY_DATA + '\\' + daily_weather_filename, 'rb')
 weather_daily_df = pickle.load(file)
 weather_daily_df.reset_index(drop=True, inplace=True)
 

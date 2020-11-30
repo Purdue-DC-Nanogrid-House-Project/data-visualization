@@ -2,6 +2,7 @@
 import pickle
 import datetime
 import pandas as pd
+import numpy as np
 from os import listdir
 from os.path import isfile, join
 from config.appconfig import config
@@ -18,8 +19,8 @@ class ASHRAE2021SummerConf:
     def __init__(self):
         self.weather_hourly_df = pd.DataFrame()
         self.weather_daily_df = pd.DataFrame()
-        self.weather_station_df = pd.DataFrame()
-        self.measurement_types = []
+        self.weather_station_measurements = dict()
+        self.illuminance_measurements = pd.DataFrame()
 
     def load_data(self, start_date, end_date):
         # Load hourly and daily weather data available
@@ -63,18 +64,12 @@ class ASHRAE2021SummerConf:
         # Restructure loaded data
         measurement_dict = dict()
         measurement_names = raw_station_df[measurement_col_name].unique()
-        self.measurement_types = measurement_names
         for measurement_name in measurement_names:
             measurement_dict[measurement_name] = \
                 raw_station_df[raw_station_df[measurement_col_name] == measurement_name].loc[
                 :, [timestamp_col_name, data_value_col_name]]\
                 .rename(columns={data_value_col_name: measurement_name})
-
-            print()
-
-
-
-        #self.weather_hourly_df = weather_station_df
+        self.weather_station_measurements = measurement_dict
 
     @staticmethod
     def _load_dataframe_from_pickle(data_dir, data_file):
@@ -82,4 +77,16 @@ class ASHRAE2021SummerConf:
         df = pickle.load(file)
         df.reset_index(drop=True, inplace=True)
         return df
+
+    def calculate_daily_illuminance(self, start_date, end_date):
+        delta = datetime.timedelta(days=1)
+        while start_date <= end_date:
+            daily_mask = (self.weather_station_measurements['visibility'][timestamp_col_name].dt.tz_localize(
+                None) >= start_date) & (self.weather_station_measurements['visibility'][timestamp_col_name].dt.tz_localize(None) <= start_date + delta)
+            weather_station_daily_df = self.weather_station_measurements['visibility'].loc[daily_mask]
+            illuminance = \
+                np.trapz(y=weather_station_daily_df['visibility'], x=weather_station_daily_df[timestamp_col_name])
+            illuminance_df = pd.DataFrame({timestamp_col_name:[start_date], 'Illuminance': [illuminance]})
+            self.illuminance_measurements = self.illuminance_measurements.append(illuminance_df)
+            start_date += delta
 
